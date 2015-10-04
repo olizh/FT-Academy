@@ -58,6 +58,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
+    // tap on status bar to scroll back to top
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        super.touchesBegan(touches, withEvent: event)
+        let events = event!.allTouches()
+        let touch = events!.first
+        let location = touch!.locationInView(self.window)
+        let statusBarFrame = UIApplication.sharedApplication().statusBarFrame
+        if CGRectContainsPoint(statusBarFrame, location) {
+            NSNotificationCenter.defaultCenter().postNotificationName("statusBarSelected", object: nil)
+        }
+    }
 
 }
 

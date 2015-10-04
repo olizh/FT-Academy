@@ -20,7 +20,7 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
     //var startUrl = "http://olizh.github.io/?10#isInSWIFT"
     let startUrl = "http://app003.ftmailbox.com/iphone-2014.html?isInSWIFT&iOSShareWechat&gShowStatusBar"
     //let startUrl = "http://m.ftchinese.com/"
-    //let startUrl = "http://192.168.253.2:9000?isInSWIFT&iOSShareWechat&gShowStatusBar"
+    //let startUrl = "http://192.168.3.100:9000?isInSWIFT&iOSShareWechat&gShowStatusBar"
     //let startUrl = "http://m.corp.ftchinese.com/iphone-2014.html?isInSWIFT&iOSShareWechat&gShowStatusBar"
     let overlayView = UIView()
 
@@ -37,6 +37,17 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
             webView = WKWebView()
             self.view = webView
             webView!.navigationDelegate = self
+            
+            NSNotificationCenter.defaultCenter().addObserverForName("statusBarSelected", object: nil, queue: nil) { event in
+                //print("status bar clicked")
+                webView!.evaluateJavaScript("scrollToTop()") { (result, error) in
+                    if error != nil {
+                        print("an error occored when trying to scroll to Top! ")
+                    } else {
+                        print("scrolled to Top!")
+                    }
+                }
+            }
         } else {
             self.uiWebView = UIWebView()
             self.view = self.uiWebView
@@ -91,8 +102,10 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
         let url = NSURL(string:startUrl)
         let req = NSURLRequest(URL:url!)
         if #available(iOS 8.0, *) { //WKWebView doesn't support manifest. Load from a statice HTML file.
-            //self.webView!.loadRequest(req)
-            
+            let webView = self.view as! WKWebView
+
+            //webView.loadRequest(req)
+
             let templatepath = NSBundle.mainBundle().pathForResource("index", ofType: "html")!
             //let base = NSURL.fileURLWithPath(templatepath)!
             let base = NSURL(string: startUrl)
@@ -100,8 +113,9 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
             //let ss = "<content>"
             //s = s.stringByReplacingOccurrencesOfString("<content>", withString:ss)
             //self.webView!.loadHTMLString(s as String, baseURL:base)
-            let webView = self.view as! WKWebView
+            
             webView.loadHTMLString(s as String, baseURL:base)
+
 
         } else {
             //UI Web View supports manifest
@@ -326,6 +340,8 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
         let wcMoment = WeChatMoment()
         return [wcActivity, wcMoment]
     }
+    
+    
 
     /*
     func webView(webView: UIWebView, shouldStartLoadWithRequest r: NSURLRequest, navigationType nt: UIWebViewNavigationType) -> Bool {
