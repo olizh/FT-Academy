@@ -18,12 +18,15 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
     var pageStatus: WebViewStatus?
     //var startUrl = "http://m.ftchinese.com/mba-2014.html#iOSShareWechat&gShowStatusBar"
     //var startUrl = "http://olizh.github.io/?10#isInSWIFT"
-    let startUrl = "http://app003.ftmailbox.com/iphone-2014.html?isInSWIFT&iOSShareWechat&gShowStatusBar"
+    var startUrl = "http://app003.ftmailbox.com/iphone-2014.html?isInSWIFT&iOSShareWechat&gShowStatusBar"
+    let iPadStartUrl = "http://app005.ftmailbox.com/ipad-2014.html?isInSWIFT&iOSShareWechat&gShowStatusBar"
     //let startUrl = "http://m.ftchinese.com/"
     //let startUrl = "http://192.168.3.100:9000?isInSWIFT&iOSShareWechat&gShowStatusBar"
     //let startUrl = "http://m.corp.ftchinese.com/iphone-2014.html?isInSWIFT&iOSShareWechat&gShowStatusBar"
+    
+    
     let overlayView = UIView()
-
+    
     deinit {
         print("main view is being deinitialized")
     }
@@ -32,6 +35,10 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
     override func loadView() {
         super.loadView()
         pageStatus = .ViewToLoad
+        let p = NSBundle.mainBundle().infoDictionary?["CFBundleName"] as! String
+        if p == "FT中文网-iPad" {
+            startUrl = iPadStartUrl
+        }
         if #available(iOS 8.0, *) {
             var webView: WKWebView?
             webView = WKWebView()
@@ -75,7 +82,7 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
         view.addConstraint(NSLayoutConstraint(item: imageView, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: view, attribute: NSLayoutAttribute.Bottom, multiplier: 1/3, constant: 1))
         view.addConstraint(NSLayoutConstraint(item: imageView, attribute: NSLayoutAttribute.Width, relatedBy: NSLayoutRelation.Equal, toItem: nil, attribute: NSLayoutAttribute.NotAnAttribute, multiplier: 1, constant: 266))
         view.addConstraint(NSLayoutConstraint(item: imageView, attribute: NSLayoutAttribute.Height, relatedBy: NSLayoutRelation.Equal, toItem: nil, attribute: NSLayoutAttribute.NotAnAttribute, multiplier: 1, constant: 210))
-
+        
         let label = UILabel(frame: CGRectMake(0, 0, 441, 21))
         label.center = CGPointMake(160, 284)
         label.textAlignment = NSTextAlignment.Center
@@ -89,7 +96,7 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
         view.addConstraint(NSLayoutConstraint(item: label, attribute: NSLayoutAttribute.Width, relatedBy: NSLayoutRelation.Equal, toItem: nil, attribute: NSLayoutAttribute.NotAnAttribute, multiplier: 1, constant: 441))
         view.addConstraint(NSLayoutConstraint(item: label, attribute: NSLayoutAttribute.Height, relatedBy: NSLayoutRelation.Equal, toItem: nil, attribute: NSLayoutAttribute.NotAnAttribute, multiplier: 1, constant: 21))
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         pageStatus = .ViewLoaded
@@ -103,9 +110,9 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
         let req = NSURLRequest(URL:url!)
         if #available(iOS 8.0, *) { //WKWebView doesn't support manifest. Load from a statice HTML file.
             let webView = self.view as! WKWebView
-
+            
             //webView.loadRequest(req)
-
+            
             let templatepath = NSBundle.mainBundle().pathForResource("index", ofType: "html")!
             //let base = NSURL.fileURLWithPath(templatepath)!
             let base = NSURL(string: startUrl)
@@ -115,8 +122,8 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
             //self.webView!.loadHTMLString(s as String, baseURL:base)
             
             webView.loadHTMLString(s as String, baseURL:base)
-
-
+            
+            
         } else {
             //UI Web View supports manifest
             //Need more experiments to decide whether it's necessary to load from local file
@@ -156,7 +163,7 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
         let nextTimer = NSTimer.scheduledTimerWithTimeInterval(seconds, target: self, selector: "handleIdleEvent:", userInfo: nil, repeats: false)
         timer = nextTimer
     }
-
+    
     func handleIdleEvent(timer: NSTimer) {
         // do whatever you want when idle after certain period of time
         displayWebView()
@@ -170,7 +177,7 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
             setNeedsStatusBarAppearanceUpdate()
         }
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         NSLog("memory warning in main view!")
@@ -194,21 +201,21 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
     
     //On mobile phone, lock the screen to portrait only
     override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
-        if UIScreen.mainScreen().bounds.width > 700 {
+        if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
             return UIInterfaceOrientationMask.All
         } else {
             return UIInterfaceOrientationMask.Portrait
         }
     }
-
+    
     override func shouldAutorotate() -> Bool {
-        if UIScreen.mainScreen().bounds.width > 700 {
+        if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
             return true
         } else {
             return false
         }
     }
-
+    
     @available(iOS 8.0, *)
     func webView(webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: ((WKNavigationActionPolicy) -> Void)) {
         let urlString = navigationAction.request.URL!.absoluteString
@@ -264,7 +271,13 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
             let objectsToShare = [shareData, myWebsite]
             let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: [wcActivity, wcMoment, openInSafari])
             activityVC.excludedActivityTypes = [UIActivityTypeAirDrop, UIActivityTypeAddToReadingList]
-            self.presentViewController(activityVC, animated: true, completion: nil)
+            if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
+                //self.presentViewController(controller, animated: true, completion: nil)
+                let popup: UIPopoverController = UIPopoverController(contentViewController: activityVC)
+                popup.presentPopoverFromRect(CGRectMake(self.view.frame.size.width / 2, self.view.frame.size.height / 4, 0, 0), inView: self.view, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: true)
+            } else {
+                self.presentViewController(activityVC, animated: true, completion: nil)
+            }
         }
     }
     
@@ -342,23 +355,23 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
     }
     
     
-
+    
     /*
     func webView(webView: UIWebView, shouldStartLoadWithRequest r: NSURLRequest, navigationType nt: UIWebViewNavigationType) -> Bool {
-        if r.URL.scheme == "play" {
-            println("user would like to hear the podcast")
-            return false
-        }
-        if nt == .LinkClicked { // disable link-clicking
-            if self.canNavigate {
-                return true
-            }
-            println("user would like to navigation to \(r.URL)")
-            // this is how you would open in Mobile Safari
-            // UIApplication.sharedApplication().openURL(r.URL)
-            return false
-        }
-        return true
+    if r.URL.scheme == "play" {
+    println("user would like to hear the podcast")
+    return false
+    }
+    if nt == .LinkClicked { // disable link-clicking
+    if self.canNavigate {
+    return true
+    }
+    println("user would like to navigation to \(r.URL)")
+    // this is how you would open in Mobile Safari
+    // UIApplication.sharedApplication().openURL(r.URL)
+    return false
+    }
+    return true
     }
     */
     
