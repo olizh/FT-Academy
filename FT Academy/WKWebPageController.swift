@@ -190,6 +190,8 @@ class WKWebPageController: UIViewController, UIWebViewDelegate, WKNavigationDele
             url = webView.URL
         } else {
             url = containerView.request?.URL
+            webPageTitle = containerView.stringByEvaluatingJavaScriptFromString("document.title")!
+            
         }
         if let myWebsite = url {
             let shareData = DataForShare()

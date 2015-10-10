@@ -24,6 +24,7 @@
 		50256CC51A4C1916005950B9 /* WKWebPageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50256CC41A4C1916005950B9 /* WKWebPageController.swift */; };
 		50604A631A5552F2003803E6 /* webview.html in Resources */ = {isa = PBXBuildFile; fileRef = 50604A621A5552F1003803E6 /* webview.html */; };
 		50873CCC1A503A880027955A /* GoogleAdMob.m in Sources */ = {isa = PBXBuildFile; fileRef = 50873CCB1A503A880027955A /* GoogleAdMob.m */; };
+		5090FE611BC8DBC400FCD052 /* IJReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5090FE601BC8DBC400FCD052 /* IJReachability.swift */; settings = {ASSET_TAGS = (); }; };
 		50A677271A4EBFBC002B347F /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 50A677261A4EBFBC002B347F /* index.html */; };
 		50FC07E21A539BF3006EE23F /* libWeChatSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 50FC07DF1A539BF3006EE23F /* libWeChatSDK.a */; };
 		50FC07E41A53A2B3006EE23F /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50FC07E31A53A2B3006EE23F /* CoreLocation.framework */; };
@@ -67,6 +68,7 @@
 		50873CC91A503A870027955A /* FT Academy-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FT Academy-Bridging-Header.h"; sourceTree = "<group>"; };
 		50873CCA1A503A880027955A /* GoogleAdMob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoogleAdMob.h; sourceTree = "<group>"; };
 		50873CCB1A503A880027955A /* GoogleAdMob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoogleAdMob.m; sourceTree = "<group>"; };
+		5090FE601BC8DBC400FCD052 /* IJReachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IJReachability.swift; sourceTree = "<group>"; };
 		50A677261A4EBFBC002B347F /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = index.html; path = supporting/index.html; sourceTree = "<group>"; };
 		50FC07DF1A539BF3006EE23F /* libWeChatSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libWeChatSDK.a; sourceTree = "<group>"; };
 		50FC07E01A539BF3006EE23F /* WXApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApi.h; sourceTree = "<group>"; };
@@ -145,6 +147,7 @@
 				50159E441B98A70B00F22FFC /* ShareToWeChat.swift */,
 				50159E4A1B9B2ED900F22FFC /* OpenInSafari.swift */,
 				50159E481B9B249900F22FFC /* ShareToMoment.swift */,
+				5090FE601BC8DBC400FCD052 /* IJReachability.swift */,
 				50256CA51A4B9D0B005950B9 /* Images.xcassets */,
 				50256CA71A4B9D0B005950B9 /* LaunchScreen.xib */,
 				50256C9C1A4B9D0B005950B9 /* Supporting Files */,
@@ -295,6 +298,7 @@
 				50159E4B1B9B2ED900F22FFC /* OpenInSafari.swift in Sources */,
 				50873CCC1A503A880027955A /* GoogleAdMob.m in Sources */,
 				50256CA11A4B9D0B005950B9 /* ViewController.swift in Sources */,
+				5090FE611BC8DBC400FCD052 /* IJReachability.swift in Sources */,
 				50159E471B9B147500F22FFC /* DataForShare.swift in Sources */,
 				50256C9F1A4B9D0B005950B9 /* AppDelegate.swift in Sources */,
 			);
