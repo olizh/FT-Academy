@@ -26,13 +26,11 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
     
     
     let overlayView = UIView()
+    let reachability = Reachability.reachabilityForInternetConnection()
     
     deinit {
         print("main view is being deinitialized")
     }
-    
-    
-    
     
     override func loadView() {
         super.loadView()
@@ -105,6 +103,8 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
         resetTimer(5.0)
     }
     
+
+    
     func loadFromLocal() {
         let url = NSURL(string:startUrl)
         let req = NSURLRequest(URL:url!)
@@ -137,6 +137,24 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
         } else {
             NSLog("first time load!")
         }
+        
+        NSNotificationCenter.defaultCenter().addObserver(self,
+            selector: "reachabilityChanged:",
+            name: ReachabilityChangedNotification,
+            object: reachability)
+        
+        reachability!.startNotifier()
+        print("start listen to reachability")
+        
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(false)
+        reachability!.stopNotifier()
+        NSNotificationCenter.defaultCenter().removeObserver(self,
+            name: ReachabilityChangedNotification,
+            object: reachability)
+        print("stopped listen to reachability")
     }
     
     func checkBlankPage() {
@@ -159,10 +177,25 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
             }
         }
     }
+
+    func reachabilityChanged(note: NSNotification) {
+        let reachability = note.object as! Reachability
+        var connectionType = "unknown"
+        if reachability.isReachable() {
+            if reachability.isReachableViaWiFi() {
+                connectionType = "wifi"
+            } else {
+                connectionType = "data"
+            }
+        } else {
+            connectionType = "no"
+        }
+        updateConnectionToWeb(connectionType)
+    }
     
     func checkConnectionType() {
         let statusType = IJReachability().connectedToNetworkOfType()
-        var connectionType = ""
+        var connectionType = "unknown"
         switch statusType {
         case .WWAN:
             connectionType = "data"
@@ -171,6 +204,10 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
         case .NotConnected:
             connectionType =  "no"
         }
+        updateConnectionToWeb(connectionType)
+    }
+    
+    func updateConnectionToWeb(connectionType: String) {
         let jsCode = "window.gConnectionType = '\(connectionType)';"
         if #available(iOS 8.0, *) { //WKWebView doesn't support manifest. Load from a statice HTML file.
             let webView = self.view as! WKWebView
