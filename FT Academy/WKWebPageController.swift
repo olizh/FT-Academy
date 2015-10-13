@@ -192,7 +192,7 @@ class WKWebPageController: UIViewController, UIWebViewDelegate, WKNavigationDele
             url = containerView.request?.URL
             webPageTitle = containerView.stringByEvaluatingJavaScriptFromString("document.title")!
             let jsCode = "function getContentByMetaTagName(c) {for (var b = document.getElementsByTagName('meta'), a = 0; a < b.length; a++) {if (c == b[a].name || c == b[a].getAttribute('property')) { return b[a].content; }} return '';}"
-            containerView.stringByEvaluatingJavaScriptFromString(jsCode)
+            let _ = containerView.stringByEvaluatingJavaScriptFromString(jsCode)
             webPageDescription = containerView.stringByEvaluatingJavaScriptFromString("getContentByMetaTagName('og:description') || getContentByMetaTagName('description') || ''")!
             webPageImage = containerView.stringByEvaluatingJavaScriptFromString("getContentByMetaTagName('og:image') || ''")!
             webPageImageIcon = containerView.stringByEvaluatingJavaScriptFromString("encodeURIComponent(getContentByMetaTagName('og:thumbnail') || '')")!

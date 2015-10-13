@@ -27,6 +27,7 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
     
     let overlayView = UIView()
     let reachability = Reachability.reachabilityForInternetConnection()
+    var reachabilityNotifierOn = false
     
     deinit {
         print("main view is being deinitialized")
@@ -137,26 +138,40 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
         } else {
             NSLog("first time load!")
         }
-        
-        NSNotificationCenter.defaultCenter().addObserver(self,
-            selector: "reachabilityChanged:",
-            name: ReachabilityChangedNotification,
-            object: reachability)
-        
-        reachability!.startNotifier()
-        print("start listen to reachability")
-        
+        //checkConnectionType()
+        turnOnReachabilityNotifier()
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(false)
-        reachability!.stopNotifier()
-        NSNotificationCenter.defaultCenter().removeObserver(self,
-            name: ReachabilityChangedNotification,
-            object: reachability)
-        print("stopped listen to reachability")
+        turnOffReachabilityNotifier()
     }
     
+    func turnOnReachabilityNotifier() {
+        if reachabilityNotifierOn == false {
+            NSNotificationCenter.defaultCenter().addObserver(self,
+                selector: "reachabilityChanged:",
+                name: ReachabilityChangedNotification,
+                object: reachability)
+            
+            reachability!.startNotifier()
+            reachabilityNotifierOn = true
+            print("start listen to reachability")
+        }
+    }
+    
+    func turnOffReachabilityNotifier() {
+        if reachabilityNotifierOn == true {
+            reachability!.stopNotifier()
+            NSNotificationCenter.defaultCenter().removeObserver(self,
+                name: ReachabilityChangedNotification,
+                object: reachability)
+            reachabilityNotifierOn = false
+            print("stopped listen to reachability")
+        }
+    }
+    
+
     func checkBlankPage() {
         if #available(iOS 8.0, *) {
             let webView = self.view as! WKWebView
@@ -165,13 +180,15 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
                     print("an error occored! Need to refresh the web app! ")
                     self.loadFromLocal()
                 } else {
-                    self.checkConnectionType()
+                    self.turnOnReachabilityNotifier()
+                    //self.checkConnectionType()
                     print("js run successfully!")
                 }
             }
         } else {
             if let _ = uiWebView.stringByEvaluatingJavaScriptFromString("document.querySelector('body').innerHTML") {
-                self.checkConnectionType()
+                self.turnOnReachabilityNotifier()
+                //self.checkConnectionType()
             } else {
                 self.loadFromLocal()
             }
@@ -194,6 +211,17 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
     }
     
     func checkConnectionType() {
+        var connectionType = "unknown"
+        if reachability!.isReachableViaWiFi() {
+            //print("Reachable via WiFi")
+            connectionType =  "wifi"
+        } else if reachability!.isReachableViaWWAN() {
+            connectionType = "data"
+        } else {
+            connectionType =  "no"
+        }
+        updateConnectionToWeb(connectionType)
+        /*
         let statusType = IJReachability().connectedToNetworkOfType()
         var connectionType = "unknown"
         switch statusType {
@@ -205,6 +233,7 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
             connectionType =  "no"
         }
         updateConnectionToWeb(connectionType)
+*/
     }
     
     func updateConnectionToWeb(connectionType: String) {
@@ -220,7 +249,7 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
             }
         } else {
             //print("try to update connection type on iOS 7")
-            uiWebView.stringByEvaluatingJavaScriptFromString(jsCode)
+            let _ = uiWebView.stringByEvaluatingJavaScriptFromString(jsCode)
             print("updated connection type on iOS 7")
         }
     }
