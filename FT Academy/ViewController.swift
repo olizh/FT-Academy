@@ -26,9 +26,9 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
     
     
     let overlayView = UIView()
-    let reachability = Reachability.reachabilityForInternetConnection()
-    var reachabilityNotifierOn = false
-    
+//    let reachability = Reachability.reachabilityForInternetConnection()
+//    var reachabilityNotifierOn = false
+//    
     deinit {
         print("main view is being deinitialized")
     }
@@ -125,7 +125,7 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
             uiWebView?.loadRequest(req)
             //uiWebView.loadHTMLString(s as String, baseURL: base)
         }
-        checkConnectionType()
+        //checkConnectionType()
         //uiWebView.loadHTMLString(s as String, baseURL: base)
     }
     
@@ -139,14 +139,35 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
             NSLog("first time load!")
         }
         //checkConnectionType()
-        turnOnReachabilityNotifier()
+        //turnOnReachabilityNotifier()
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(false)
-        turnOffReachabilityNotifier()
+        //turnOffReachabilityNotifier()
     }
-    
+    func checkBlankPage() {
+        if #available(iOS 8.0, *) {
+            let webView = self.view as! WKWebView
+            webView.evaluateJavaScript("document.querySelector('body').innerHTML") { (result, error) in
+                if error != nil {
+                    print("an error occored! Need to refresh the web app! ")
+                    self.loadFromLocal()
+                } else {
+                    //self.turnOnReachabilityNotifier()
+                    print("js run successfully!")
+                }
+            }
+        } else {
+            if let _ = uiWebView.stringByEvaluatingJavaScriptFromString("document.querySelector('body').innerHTML") {
+                //self.turnOnReachabilityNotifier()
+                
+            } else {
+                self.loadFromLocal()
+            }
+        }
+    }
+    /*
     func turnOnReachabilityNotifier() {
         if reachabilityNotifierOn == false {
             NSNotificationCenter.defaultCenter().addObserver(self,
@@ -172,28 +193,7 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
     }
     
 
-    func checkBlankPage() {
-        if #available(iOS 8.0, *) {
-            let webView = self.view as! WKWebView
-            webView.evaluateJavaScript("document.querySelector('body').innerHTML") { (result, error) in
-                if error != nil {
-                    print("an error occored! Need to refresh the web app! ")
-                    self.loadFromLocal()
-                } else {
-                    self.turnOnReachabilityNotifier()
-                    //self.checkConnectionType()
-                    print("js run successfully!")
-                }
-            }
-        } else {
-            if let _ = uiWebView.stringByEvaluatingJavaScriptFromString("document.querySelector('body').innerHTML") {
-                self.turnOnReachabilityNotifier()
-                //self.checkConnectionType()
-            } else {
-                self.loadFromLocal()
-            }
-        }
-    }
+
 
     func reachabilityChanged(note: NSNotification) {
         let reachability = note.object as! Reachability
@@ -253,6 +253,8 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
             print("updated connection type on iOS 7")
         }
     }
+    
+    */
     
     func resetTimer(seconds: NSTimeInterval) {
         timer?.invalidate()
