@@ -25,7 +25,7 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
 //    var reachabilityNotifierOn = false
 //    
     deinit {
-        print("main view is being deinitialized")
+        //print("main view is being deinitialized")
     }
     
     override func loadView() {
@@ -43,9 +43,9 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
             NSNotificationCenter.defaultCenter().addObserverForName("statusBarSelected", object: nil, queue: nil) { event in
                 webView!.evaluateJavaScript("scrollToTop()") { (result, error) in
                     if error != nil {
-                        print("an error occored when trying to scroll to Top! ")
+                        //print("an error occored when trying to scroll to Top! ")
                     } else {
-                        print("scrolled to Top!")
+                        //print("scrolled to Top!")
                     }
                 }
             }
@@ -129,9 +129,9 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
         if pageStatus == .WebViewDisplayed || pageStatus == .WebViewWarned {
             //Deal with white screen when back from other scene
             checkBlankPage()
-            NSLog("back from other scene!")
+            //print("back from other scene!")
         } else {
-            NSLog("first time load!")
+            //print("first time load!")
         }
         //checkConnectionType()
         //turnOnReachabilityNotifier()
@@ -146,11 +146,11 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
             let webView = self.view as! WKWebView
             webView.evaluateJavaScript("document.querySelector('body').innerHTML") { (result, error) in
                 if error != nil {
-                    print("an error occored! Need to refresh the web app! ")
+                    //print("an error occored! Need to refresh the web app! ")
                     self.loadFromLocal()
                 } else {
                     //self.turnOnReachabilityNotifier()
-                    print("js run successfully!")
+                    //print("js run successfully!")
                 }
             }
         } else {
@@ -228,7 +228,7 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
             connectionType =  "no"
         }
         updateConnectionToWeb(connectionType)
-*/
+        */
     }
     
     func updateConnectionToWeb(connectionType: String) {
@@ -283,10 +283,10 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
     
     override func prefersStatusBarHidden() -> Bool {
         if pageStatus != .WebViewDisplayed {
-            print ("hide status bar")
+            //print ("hide status bar")
             return true
         } else {
-            print ("show status bar")
+            //print ("show status bar")
             //self.prefersStatusBarHidden = false
             return false
         }
@@ -430,10 +430,10 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
     @available(iOS 9.0, *)
     func safariViewController(controller: SFSafariViewController, didCompleteInitialLoad didLoadSuccessfully: Bool) {
         if didLoadSuccessfully == false {
-            print("Page did not load!")
+            //print("Page did not load!")
             //controller.dismissViewControllerAnimated(true, completion: nil)
         } else {
-            print("Page Load Successful!")
+            //print("Page Load Successful!")
         }
     }
     

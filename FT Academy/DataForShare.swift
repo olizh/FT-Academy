@@ -24,7 +24,17 @@ class DataForShare: NSObject, UIActivityItemSource {
         if(activityType == UIActivityTypeMail){
             textForShare = webPageDescription
         } else if(activityType == UIActivityTypePostToWeibo || activityType == UIActivityTypePostToTwitter){
-            textForShare = "【" + webPageTitle + "】" + webPageDescription + "（分享自 @FT中文网）"
+            textForShare = "【" + webPageTitle + "】" + webPageDescription
+            let textForShareCredit = "（分享自 @FT中文网）"
+            let textForShareLimit = 140
+            let textForShareTailCount = textForShareCredit.characters.count + url.characters.count
+            if textForShare.characters.count + textForShareTailCount > textForShareLimit {
+                let index = textForShare.startIndex.advancedBy(textForShareLimit - textForShareTailCount - 3)
+                textForShare = textForShare.substringToIndex(index) + "..."
+            }
+            textForShare = textForShare + "（分享自 @FT中文网）"
+//            print(textForShare.characters.count)
+//            print(url.characters.count)
         } else {
             textForShare = webPageTitle
         }
