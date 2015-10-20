@@ -16,14 +16,9 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
     var uiWebView: UIWebView!
     weak var timer: NSTimer?
     var pageStatus: WebViewStatus?
-    //var startUrl = "http://m.ftchinese.com/mba-2014.html#iOSShareWechat&gShowStatusBar"
-    //var startUrl = "http://olizh.github.io/?10#isInSWIFT"
     var startUrl = "http://app003.ftmailbox.com/iphone-2014.html?isInSWIFT&iOSShareWechat&gShowStatusBar"
     let iPadStartUrl = "http://app005.ftmailbox.com/ipad-2014.html?isInSWIFT&iOSShareWechat&gShowStatusBar"
-    //let startUrl = "http://m.ftchinese.com/"
-    //let startUrl = "http://192.168.3.100:9000?isInSWIFT&iOSShareWechat&gShowStatusBar"
-    //let startUrl = "http://m.corp.ftchinese.com/iphone-2014.html?isInSWIFT&iOSShareWechat&gShowStatusBar"
-    
+    //var startUrl = "http://192.168.253.2:9000?isInSWIFT&iOSShareWechat&gShowStatusBar"
     
     let overlayView = UIView()
 //    let reachability = Reachability.reachabilityForInternetConnection()
