@@ -102,8 +102,8 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
     
     func loadFromLocal() {
         
-        let url = NSURL(string:startUrl)
-        let req = NSURLRequest(URL:url!)
+        //let url = NSURL(string:startUrl)
+        //let req = NSURLRequest(URL:url!)
         let templatepath = NSBundle.mainBundle().pathForResource("index", ofType: "html")!
         //let base = NSURL.fileURLWithPath(templatepath)!
         let base = NSURL(string: startUrl)
@@ -117,8 +117,8 @@ class ViewController: UIViewController, UIWebViewDelegate, WKNavigationDelegate,
             //self.webView!.loadHTMLString(s as String, baseURL:base)
             webView.loadHTMLString(s as String, baseURL:base)
         } else {
-            uiWebView?.loadRequest(req)
-            //uiWebView.loadHTMLString(s as String, baseURL: base)
+            //uiWebView?.loadRequest(req)
+            uiWebView.loadHTMLString(s as String, baseURL: base)
         }
         checkConnectionType()
         //uiWebView.loadHTMLString(s as String, baseURL: base)
